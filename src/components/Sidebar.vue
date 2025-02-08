@@ -1,15 +1,24 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import { useUserStore } from '@/store/user'
+
+const userStore = useUserStore()
+userStore.removeUserId()
+
 </script>
 
 <template>
-    <header>
+  <header>
     <RouterLink class="header__title" to="/">Теле<span class="blue">чат</span></RouterLink>
     
     <nav class="nav">
-      <RouterLink to="/login">Войти</RouterLink>
       <RouterLink to="/chat">Чаты</RouterLink>
+      <RouterLink to="/login">Войти</RouterLink>
     </nav>
+
+    <footer class="bottom">
+      <button @click="" class="bottom__button">Выйти</button>
+    </footer>
   </header>
 </template>
 
@@ -38,4 +47,18 @@ header {
   color: white;
   font-size: 1.2rem;
 }
+
+.bottom {
+  margin-top: auto;
+}
+
+.bottom__button {
+  padding: 0.5rem 1rem;
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+
 </style>
