@@ -1,51 +1,62 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+
+import { logout } from '@/api/auth'
 import { useUserStore } from '@/store/user'
+import { useContactStore } from '@/store/contact'
+import useSocketStore from '@/store/socket'
+import ContactList from '@/components/ContactList.vue'
 
 const userStore = useUserStore()
-userStore.removeUserId()
+const contactStore = useContactStore()
+const socketStore = useSocketStore()
 
+socketStore.socket.on('users', (newUsers) => {
+  console.log(newUsers)
+  contactStore.setContacts(newUsers)
+})
 </script>
 
 <template>
-  <header>
-    <RouterLink class="header__title" to="/">Теле<span class="blue">чат</span></RouterLink>
-    
-    <nav class="nav">
-      <RouterLink to="/chat">Чаты</RouterLink>
-      <RouterLink to="/login">Войти</RouterLink>
-    </nav>
+  <div class="sidebar">
+    <RouterLink class="sidebar__title" to="/"> Телечат </RouterLink>
+
+    <hr />
+    <p>Контакты:</p>
+    <ContactList />
 
     <footer class="bottom">
-      <button @click="" class="bottom__button">Выйти</button>
+      <div class="user">
+        <p class="user__name">User: {{ userStore.id }}</p>
+        <button
+          @click="logout"
+          class="bottom__button"
+          :disabled="!userStore.id"
+        >
+          Выйти
+        </button>
+      </div>
     </footer>
-  </header>
+  </div>
 </template>
 
 <style scoped>
-header {
+.sidebar {
   padding: 1rem;
   line-height: 1.5;
-  
+
   display: flex;
   flex-direction: column;
 
-  color: whitesmoke;
-  background-color: var(--color-text);
+  color: var(--color-text);
+  background-color: var();
+  border: 1px solid var(--color-border);
 }
 
-.header__title {
+.sidebar__title {
   font-size: 2.6rem;
   font-weight: 500;
-}
-
-.nav {
-  display: flex;
-  padding: 1rem 0rem;
-  flex-direction: column;
-  gap: 0.3rem;
-  color: white;
-  font-size: 1.2rem;
+  color: var(--color-primary);
 }
 
 .bottom {
@@ -53,12 +64,15 @@ header {
 }
 
 .bottom__button {
-  padding: 0.5rem 1rem;
-  background-color: var(--color-primary);
-  color: white;
   border: none;
-  border-radius: 0.3rem;
   cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
 }
 
+.user {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 </style>

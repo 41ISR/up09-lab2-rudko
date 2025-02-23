@@ -1,53 +1,127 @@
 <script setup lang="ts">
-import { socket } from "./../api/socket";
+// import BiArrowRightCircle from "oh-vue-icons/icons";
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
+import { useUserStore } from '@/store/user'
+import useSocketStore from '@/store/socket'
+import { useMessageStore } from '@/store/message'
+
+import type { UserDTO } from '@/type/user'
+import type { MessageDTO } from '@/type/message'
+import { CoUnderline } from 'oh-vue-icons/icons'
+
+const userStore = useUserStore()
+const messageStore = useMessageStore()
+
+const route = useRoute()
+const socketStore = useSocketStore()
+
+const chatPartnerId = ref<string | null>()
+const inputedMessage = ref<string | null>()
+
+watch(
+  () => route.params.id,
+  (newId, oldId) => {
+    // react to route changes...
+    chatPartnerId.value = route.params.id as string
+  }
+)
+
+socketStore.socket.emit('register', userStore.id)
+
+socketStore.socket.on('private_message', (data) => {
+  console.log(data)
+  // messages.push(data<MessageDTO>);
+})
+
+function addMessage(
+  from: string,
+  to: string,
+  message: string,
+  timestamp?: string
+) {}
+
+const message = ref()
+
+function sendMessage() {
+  const timestamp = new Date().toISOString()
+  socketStore.socket.emit('private_message', {
+    to: chatPartnerId,
+    message,
+    timestamp,
+  })
+  // addMessage(
+  //   userStore.id || 'me',
+  //   chatPartnerId || 'anime',
+  //   message.value,
+  //   timestamp,
+  // )
+  inputedMessage.value = ''
+}
 </script>
 
-<template class="content wrapper">
-  <main class="main">
-    <div class="messages">
-      <div class="message">
-        <div class="message__author">Имя</div>
-        <div class="message__text">Текст сообщения</div>
-      </div>
-    </div>
-  
+<template>
+  <div class="content wrapper">
+    <header>
+      <p>Chat with {{ chatPartnerId }}</p>
+    </header>
+
+    <main class="main"></main>
 
     <footer class="footer">
-      <form>
-        <input type="text" placeholder="Введите сообщение" />
-        <button type="submit">Отправить</button>
+      <form class="form">
+        <input
+          v-model="message"
+          class="form__input"
+          type="text"
+          placeholder="Введите сообщение..."
+        />
+        <button class="form__button" type="submit">Отправить</button>
       </form>
     </footer>
-  </main>
+  </div>
 </template>
 
 <style scoped>
-.header {
-  width: 100%;
+.form {
   display: flex;
-  justify-content: space-between;
-  padding: 1rem;
-  color: whitesmoke;
-  background-color: var(--color-text);
+  padding: 0.5rem 2rem;
+  border-radius: 50px;
+  background-color: var(--vt-c-black);
+}
+
+.form__button {
+  width: 1rem;
+  height: 1rem;
+  border: none;
+  color: var(--vt-c-white-soft);
+  background-color: transparent;
+}
+
+.form__input {
+  border: none;
+  flex: 1;
+  height: 1.7rem;
+  font-size: 1rem;
+  color: var(--vt-c-white-soft);
+  background-color: transparent;
+}
+
+.form__input:focus-visible {
+  border: none;
 }
 
 .wrapper {
   display: flex;
   flex-direction: column;
   height: 100dvh;
-  position: relative;
 }
 
 .main {
   padding: 1rem;
   flex-direction: column;
   display: flex;
-}
-
-.messages {
   flex: 1;
-  overflow-y: auto;
 }
-
 </style>
