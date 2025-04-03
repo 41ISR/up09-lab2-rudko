@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import { useUserStore } from "@/store/user"
+import { useClientStore } from "@/store/user"
 
 import ChatView from '@/views/ChatView.vue'
 import LoginView from '@/views/LoginView.vue'
@@ -31,9 +31,9 @@ export const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  const user = useUserStore()
+  const user = useClientStore()
 
-  if (to.meta.requiresAuth && !user.id)
+  if (to.meta.requiresAuth && !user.userId)
     return '/'
 })
 

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { router } from '@/router/index'
 
-import { useUserStore } from '@/store/user'
+import { useClientStore } from '@/store/user'
 
 const userApi = axios.create({
   baseURL: 'http://82.147.71.186:3000',
@@ -12,7 +12,7 @@ export async function login(id: string) {
 }
 
 export function logout() {
-  const userStore = useUserStore()
+  const userStore = useClientStore()
   userStore.removeUser()
   router.push({ name: 'Login' })
 }

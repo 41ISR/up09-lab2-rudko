@@ -3,7 +3,7 @@
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import { useUserStore } from '@/store/user'
+import { useClientStore } from '@/store/user'
 import useSocketStore from '@/store/socket'
 import { useMessageStore } from '@/store/message'
 
@@ -11,7 +11,7 @@ import type { UserDTO } from '@/type/user'
 import type { MessageDTO } from '@/type/message'
 import { CoUnderline } from 'oh-vue-icons/icons'
 
-const userStore = useUserStore()
+const userStore = useClientStore()
 const messageStore = useMessageStore()
 
 const route = useRoute()
@@ -28,7 +28,7 @@ watch(
   }
 )
 
-socketStore.socket.emit('register', userStore.id)
+socketStore.socket.emit('register', userStore.userId)
 
 socketStore.socket.on('private_message', (data) => {
   console.log(data)

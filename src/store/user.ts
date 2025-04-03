@@ -3,21 +3,21 @@ import type { UserDTO } from "@/type/user"
 import type { MessageDTO } from "@/type/message"
 
 
-export const useUserStore = defineStore('user', {
+export const useClientStore = defineStore('user', {
   state: () => {
     return {
-      id: null as string | null,
-      activeChatId: null as number | null,
+      userId: null as string | null,
+      activeChatId: null as string | null,
       message: [] as MessageDTO[]
     }
   },
 
   actions: {
     setUser(id: string) {
-      this.id = id
+      this.userId = id
     },
     removeUser() {
-      this.id = null
+      this.userId = null
     },
   },
   persist: true,

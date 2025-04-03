@@ -2,12 +2,12 @@
 import { RouterLink } from 'vue-router'
 
 import { logout } from '@/api/auth'
-import { useUserStore } from '@/store/user'
+import { useClientStore } from '@/store/user'
 import { useContactStore } from '@/store/contact'
 import useSocketStore from '@/store/socket'
 import ContactList from '@/components/ContactList.vue'
 
-const userStore = useUserStore()
+const userStore = useClientStore()
 const contactStore = useContactStore()
 const socketStore = useSocketStore()
 
@@ -27,11 +27,11 @@ socketStore.socket.on('users', (newUsers) => {
 
     <footer class="bottom">
       <div class="user">
-        <p class="user__name">User: {{ userStore.id }}</p>
+        <p class="user__name">User: {{ userStore.userId }}</p>
         <button
           @click="logout"
           class="bottom__button"
-          :disabled="!userStore.id"
+          :disabled="!userStore.userId"
         >
           Выйти
         </button>
